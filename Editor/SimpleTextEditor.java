@@ -29,6 +29,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import com.JFontChooser;
 
 public class SimpleTextEditor extends JFrame implements ActionListener, TextEditorFunction {
 
@@ -38,7 +39,7 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
     private JMenuBar menuBar;
     private JMenu fileMenu, editMenu, formatMenu;
     private JMenuItem newMenuItem, openMenuItem, saveMenuItem, saveAsMenuItem, exitMenuItem, cutMenuItem, copyMenuItem,
-            pasteMenuItem, selectAllMenuItem, fontMenuItem, colorMenuItem;
+            pasteMenuItem, selectAllMenuItem, fontMenuItem,fontSizeMenuItem, colorMenuItem;
     private JToolBar toolBar;
     private JButton newButton, openButton, saveButton, cutButton, copyButton, pasteButton;
     private JPanel statusBar;
@@ -110,6 +111,18 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         selectAllMenuItem.setMnemonic('a');
         selectAllMenuItem.addActionListener(this);
 
+        fontMenuItem = new JMenuItem("Font");
+        fontMenuItem.setMnemonic('f');
+        fontMenuItem.addActionListener(this);
+
+        fontSizeMenuItem = new JMenuItem("Font Size");
+        fontSizeMenuItem.setMnemonic('z');
+        fontSizeMenuItem.addActionListener(this);
+
+        colorMenuItem = new JMenuItem("Color");
+        colorMenuItem.setMnemonic('c');
+        colorMenuItem.addActionListener(this);
+
 
         // Add the menu bar to the window
         setJMenuBar(menuBar);
@@ -160,6 +173,18 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         fontMenuItem.setMnemonic('f');
         fontMenuItem.addActionListener(this);
 
+        ImageIcon fontSizeIcon = new ImageIcon(getClass().getResource("icons/size.png"));
+        fontSizeIcon.setImage(fontSizeIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        fontSizeMenuItem = new JMenuItem("Font Size", fontSizeIcon);
+        fontSizeMenuItem.setMnemonic('z');
+        fontSizeMenuItem.addActionListener(this);
+
+        ImageIcon colorIcon = new ImageIcon(getClass().getResource("icons/color.png"));
+        colorIcon.setImage(colorIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        colorMenuItem = new JMenuItem("Color", colorIcon);
+        colorMenuItem.setMnemonic('c');
+        colorMenuItem.addActionListener(this);
+
         // Add the buttons to the tool bar
         toolBar.add(newButton);
         toolBar.add(openButton);
@@ -169,7 +194,9 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         toolBar.add(copyButton);
         toolBar.add(pasteButton);
         toolBar.addSeparator();
-        
+        toolBar.add(fontMenuItem);
+        toolBar.add(fontSizeMenuItem);
+        toolBar.add(colorMenuItem);
 
         // Add the tool bar to the window
         add(toolBar, BorderLayout.NORTH);
@@ -180,7 +207,7 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         statusBar.setPreferredSize(new java.awt.Dimension(getWidth(), 20));
         statusBar.setLayout(new BorderLayout());
 
-        statusLabel = new JLabel("Listo");
+        statusLabel = new JLabel("Ready");
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusBar.add(statusLabel, BorderLayout.WEST);
 
@@ -215,9 +242,8 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         add(scrollPane, BorderLayout.CENTER);
 
         // set the space for the text area
-        textArea.setMargin(new Insets(5, 5, 5, 5));
+        textArea.setMargin(new Insets(10, 10, 10, 10));
         
-
     }
 
     public static void main(String[] args) {
@@ -249,6 +275,9 @@ public void actionPerformed2(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
         // Set the file filter to only show text files
         fileChooser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Java Files", "java"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("HTML Files", "html"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Word Files", "doc"));
         // Show the file chooser dialog
         int result = fileChooser.showOpenDialog(this);
 
@@ -282,7 +311,7 @@ public void actionPerformed2(ActionEvent e) {
         }
         
     }
-    statusLabel = new JLabel(" Listo");
+    statusLabel = new JLabel(" Ready ");
     statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
     statusBar.add(statusLabel);
 
@@ -293,12 +322,16 @@ public void actionPerformed2(ActionEvent e) {
     add(statusBar, BorderLayout.SOUTH);
 
     // Create the format menu and menu items
-    formatMenu = new JMenu("Formato");
+    formatMenu = new JMenu("Format");
     formatMenu.setMnemonic('f');
 
-    fontMenuItem = new JMenuItem("Fuente...");
+    fontMenuItem = new JMenuItem("font...");
     fontMenuItem.setMnemonic('u');
     fontMenuItem.addActionListener(this);
+
+    fontSizeMenuItem = new JMenuItem("Font Size...");
+    fontSizeMenuItem.setMnemonic('z');
+    fontSizeMenuItem.addActionListener(this);
 
     colorMenuItem = new JMenuItem("Color...");
     colorMenuItem.setMnemonic('c');
@@ -306,13 +339,14 @@ public void actionPerformed2(ActionEvent e) {
 
     formatMenu.add(fontMenuItem);
     formatMenu.add(colorMenuItem);
+    formatMenu.add(fontSizeMenuItem);
 
     // Add the file, edit, and format menus to the menu bar
     menuBar.add(fileMenu);
     menuBar.add(editMenu);
     menuBar.add(formatMenu);
         // Add a label to the status bar
-        statusLabel = new JLabel("Listo");
+        statusLabel = new JLabel(" Ready");
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusBar.add(statusLabel);
     
@@ -323,19 +357,20 @@ public void actionPerformed2(ActionEvent e) {
         add(scrollPane, BorderLayout.CENTER);
     
         // Create the format menu
-        formatMenu = new JMenu("Formato");
+        formatMenu = new JMenu("Format");
         formatMenu.setMnemonic('f');
     
-        fontMenuItem = new JMenuItem("Fuente");
+        fontMenuItem = new JMenuItem("Font");
         fontMenuItem.setMnemonic('u');
         fontMenuItem.addActionListener(this);
     
-        colorMenuItem = new JMenuItem("Color de fondo");
+        colorMenuItem = new JMenuItem("Color text");
         colorMenuItem.setMnemonic('c');
         colorMenuItem.addActionListener(this);
     
         formatMenu.add(fontMenuItem);
         formatMenu.add(colorMenuItem);
+        formatMenu.add(fontSizeMenuItem);
     
         // Add the menus to the menu bar
         menuBar.add(fileMenu);
@@ -375,7 +410,11 @@ public void actionPerformed2(ActionEvent e) {
         } else if (e.getSource() == selectAllMenuItem) {
             selectAll();
         } else if (e.getSource() == colorMenuItem) {
-            selectBackgroundColor();
+            selectLeterColor();
+        }else if (e.getSource() == fontMenuItem) {
+            selectFont();
+        }else if (e.getSource() == fontSizeMenuItem) {
+            selectFontSize();
         }
     }
     // create a new file
@@ -462,7 +501,7 @@ public void actionPerformed2(ActionEvent e) {
                 bufferedWriter.close();
                 setTitle(file.getName());
                 updateMenuItemAndButtonStatus(true, true, true, true, true, true, true, true, true, true, true, true);
-                statusLabel.setText("Archivo guardado");
+                statusLabel.setText("File saved");
             }
             catch (Exception ex) {
                 ex.printStackTrace();
@@ -472,7 +511,7 @@ public void actionPerformed2(ActionEvent e) {
 
     private void exitApplication(){
         if (textArea.getText().length() > 0) {
-            int response = showConfirmDialog("¿Desea guardar los cambios en el archivo actual?");
+            int response = showConfirmDialog("You want to save the changes to the current file?");
             if (response == JOptionPane.YES_OPTION) {
                 saveFile();
             } else if (response == JOptionPane.CANCEL_OPTION) {
@@ -484,25 +523,49 @@ public void actionPerformed2(ActionEvent e) {
     }
     private void cut() {
         textArea.cut();
-        statusLabel.setText("Texto cortado");
+        statusLabel.setText("Text cut");
     }
     private void copy() {
         textArea.copy();
-        statusLabel.setText("Texto copiado");
+        statusLabel.setText("Text copied");
     }
     private void paste() {
         textArea.paste();
-        statusLabel.setText("Texto pegado");
+        statusLabel.setText("Text pasted");
     }
 
     private void selectAll() {
         textArea.selectAll();
-        statusLabel.setText("Seleccionar todo");
+        statusLabel.setText("select all");
     }
-    private void selectBackgroundColor() {
-        Color color = JColorChooser.showDialog(this, "Seleccionar color de fondo", textArea.getBackground());
-        if (color != null) {
-            textArea.setBackground(color);
+    private void selectLeterColor() {
+        Color color = JColorChooser.showDialog(this, "Select color", Color.BLACK);
+        textArea.setForeground(color);
+        statusLabel.setText("color selected");
+    }
+    // private void selectBackgroundColor() {
+    //     Color color = JColorChooser.showDialog(this, "Select background color", Color.BLACK);
+    //     textArea.setBackground(color);
+    //     statusLabel.setText("background color selected");
+    // }
+    private void selectFont() {
+        Font font = JFontChooser.showDialog(this);
+        textArea.setFont(font);
+        statusLabel.setText("Font selected");
+    }
+    private void selectFontSize() {
+        String size = JOptionPane.showInputDialog(this, "enter font size", "font size", JOptionPane.PLAIN_MESSAGE);
+        if (size != null) {
+            try {
+                int fontSize = Integer.parseInt(size);
+                Font font = textArea.getFont();
+                font = font.deriveFont((float) fontSize);
+                textArea.setFont(font);
+                statusLabel.setText("Font size selected");
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "invalid size", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
     
