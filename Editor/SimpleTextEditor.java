@@ -60,26 +60,27 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         // Create the menu bar and menu items
         menuBar = new JMenuBar();
 
-        fileMenu = new JMenu("Archivo");
+        fileMenu = new JMenu("File");
         fileMenu.setMnemonic('a');
 
-        newMenuItem = new JMenuItem("Nuevo");
+        newMenuItem = new JMenuItem("New");
         newMenuItem.setMnemonic('n');
         newMenuItem.addActionListener(this);
 
-        openMenuItem = new JMenuItem("Abrir");
+        openMenuItem = new JMenuItem("Open");
         openMenuItem.setMnemonic('a');
         openMenuItem.addActionListener(this);
 
-        saveMenuItem = new JMenuItem("Guardar");
+        saveMenuItem = new JMenuItem("Save");
         saveMenuItem.setMnemonic('g');
+
         saveMenuItem.addActionListener(this);
 
-        saveAsMenuItem = new JMenuItem("Guardar como...");
+        saveAsMenuItem = new JMenuItem("Save as...");
         saveAsMenuItem.setMnemonic('u');
         saveAsMenuItem.addActionListener(this);
 
-        exitMenuItem = new JMenuItem("Salir");
+        exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.setMnemonic('s');
         exitMenuItem.addActionListener(this);
 
@@ -90,24 +91,25 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         fileMenu.addSeparator();
         fileMenu.add(exitMenuItem);
 
-        editMenu = new JMenu("Editar");
+        editMenu = new JMenu("Edit");
         editMenu.setMnemonic('e');
 
-        cutMenuItem = new JMenuItem("Cortar");
+        cutMenuItem = new JMenuItem("Cut");
         cutMenuItem.setMnemonic('t');
         cutMenuItem.addActionListener(this);
 
-        copyMenuItem = new JMenuItem("Copiar");
+        copyMenuItem = new JMenuItem("Copy");
         copyMenuItem.setMnemonic('c');
         copyMenuItem.addActionListener(this);
 
-        pasteMenuItem = new JMenuItem("Pegar");
+        pasteMenuItem = new JMenuItem("Paste");
         pasteMenuItem.setMnemonic('p');
         pasteMenuItem.addActionListener(this);
 
-        selectAllMenuItem = new JMenuItem("Seleccionar todo");
+        selectAllMenuItem = new JMenuItem("Select All");
         selectAllMenuItem.setMnemonic('a');
         selectAllMenuItem.addActionListener(this);
+
 
         // Add the menu bar to the window
         setJMenuBar(menuBar);
@@ -118,40 +120,47 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         ImageIcon newIcon = new ImageIcon(getClass().getResource("icons/new.png"));
         newIcon.setImage(newIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         newButton = new JButton(newIcon);
-        newButton.setToolTipText("Nuevo");
+        newButton.setToolTipText("New");
         newButton.addActionListener(this);
         
         // Repeat the same process for the other icons
         ImageIcon openIcon = new ImageIcon(getClass().getResource("icons/open.png"));
         openIcon.setImage(openIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         openButton = new JButton(openIcon);
-        openButton.setToolTipText("Abrir");
+        openButton.setToolTipText("Open");
         openButton.addActionListener(this);
         
         ImageIcon saveIcon = new ImageIcon(getClass().getResource("icons/save.png"));
         saveIcon.setImage(saveIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         saveButton = new JButton(saveIcon);
-        saveButton.setToolTipText("Guardar");
+        saveButton.setToolTipText("Save");
         saveButton.addActionListener(this);
         
         ImageIcon cutIcon = new ImageIcon(getClass().getResource("icons/cut.png"));
         cutIcon.setImage(cutIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         cutButton = new JButton(cutIcon);
-        cutButton.setToolTipText("Cortar");
+        cutButton.setToolTipText("Cut");
         cutButton.addActionListener(this);
         
         ImageIcon copyIcon = new ImageIcon(getClass().getResource("icons/copy.png"));
         copyIcon.setImage(copyIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         copyButton = new JButton(copyIcon);
-        copyButton.setToolTipText("Copiar");
+        copyButton.setToolTipText("Copy");
         copyButton.addActionListener(this);
         
         ImageIcon pasteIcon = new ImageIcon(getClass().getResource("icons/paste.png"));
         pasteIcon.setImage(pasteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         pasteButton = new JButton(pasteIcon);
-        pasteButton.setToolTipText("Pegar");
+        pasteButton.setToolTipText("Paste");
         pasteButton.addActionListener(this);
-        
+
+        ImageIcon fontIcon = new ImageIcon(getClass().getResource("icons/font.png"));
+        fontIcon.setImage(fontIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        fontMenuItem = new JMenuItem("Font", fontIcon);
+        fontMenuItem.setMnemonic('f');
+        fontMenuItem.addActionListener(this);
+
+        // Add the buttons to the tool bar
         toolBar.add(newButton);
         toolBar.add(openButton);
         toolBar.add(saveButton);
