@@ -11,9 +11,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -36,6 +37,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import utilities.*;
 
@@ -47,7 +51,7 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
     private JMenuBar menuBar;
     private JMenu fileMenu, editMenu, formatMenu;
     private JMenuItem newMenuItem, openMenuItem, saveMenuItem, saveAsMenuItem, exitMenuItem, cutMenuItem, copyMenuItem,
-            pasteMenuItem, selectAllMenuItem, fontMenuItem,fontSizeMenuItem, colorMenuItem;
+            pasteMenuItem, selectAllMenuItem, fontMenuItem,fontSizeMenuItem, colorMenuItem,colorBackgroundMenuItem;
     private JToolBar toolBar;
     private JButton newButton, openButton, saveButton, cutButton, copyButton, pasteButton;
     private JPanel statusBar;
@@ -418,11 +422,13 @@ public void actionPerformed2(ActionEvent e) {
         } else if (e.getSource() == selectAllMenuItem) {
             selectAll();
         } else if (e.getSource() == colorMenuItem) {
-            selectLeterColor();
+            selectLetterColor();
         }else if (e.getSource() == fontMenuItem) {
             selectFont();
         }else if (e.getSource() == fontSizeMenuItem) {
             selectFontSize();
+        } else if (e.getSource() == colorBackgroundMenuItem) {
+            selectLeterBackgroundColor();
         }
     }
     // create a new file
@@ -546,8 +552,26 @@ public void actionPerformed2(ActionEvent e) {
         textArea.selectAll();
         statusLabel.setText("select all");
     }
+    private void selectLetterColor() {
+        Color color = JColorChooser.showDialog(this, "Select color", Color.BLACK);
+        String selectedText = textArea.getSelectedText();
+        if (selectedText != null) {
+            JTextPane textPane = new JTextPane();
+            textPane.setFont(textArea.getFont());
+            textPane.setForeground(textArea.getForeground());
+            textPane.setText(selectedText);
+            StyledDocument doc = textPane.getStyledDocument();
+            Style style = doc.addStyle("highlight", null);
+            StyleConstants.setForeground(style, color);
+            doc.setCharacterAttributes(0, selectedText.length(), style, false);
+            textArea.replaceSelection(textPane.getText());
+            statusLabel.setText("color selected");
+        }
+    }
+    
+    
     private List<Object> highlights = new ArrayList<>();
-    private void selectLeterColor() {
+    private void selectLeterBackgroundColor() {
         Color color = JColorChooser.showDialog(this, "Select color", Color.BLACK);
         int start = textArea.getSelectionStart();
         int end = textArea.getSelectionEnd();
@@ -561,20 +585,6 @@ public void actionPerformed2(ActionEvent e) {
             e.printStackTrace();
         }
     }
-    
-    // private void selectBackgroundColor() {
-    //    Color color = JColorChooser.showDialog(this, "Select color", Color.BLACK);
-        // int start = textArea.getSelectionStart();
-        // int end = textArea.getSelectionEnd();
-        // Highlighter highlighter = textArea.getHighlighter();
-        // highlighter.removeAllHighlights(); 
-        
-        // try {
-        //     highlighter.addHighlight(start, end, new DefaultHighlighter.DefaultHighlightPainter(color));
-        //     statusLabel.setText("color selected");
-        // } catch (BadLocationException e) {
-        //     e.printStackTrace();
-        // }
     private void selectFont() {
         Font font = JFontChooser.showDialog(this);
         textArea.setFont(font);
