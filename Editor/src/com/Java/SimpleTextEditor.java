@@ -1,3 +1,4 @@
+package Java;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -10,6 +11,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -29,7 +33,11 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import com.JFontChooser;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+
+import utilities.*;
 
 public class SimpleTextEditor extends JFrame implements ActionListener, TextEditorFunction {
 
@@ -130,56 +138,56 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         toolBar.setFloatable(false);
         
         // Create a new ImageIcon with a smaller size
-        ImageIcon newIcon = new ImageIcon(getClass().getResource("icons/new.png"));
+        ImageIcon newIcon = new ImageIcon(getClass().getResource("/icons/new.png"));
         newIcon.setImage(newIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         newButton = new JButton(newIcon);
         newButton.setToolTipText("New");
         newButton.addActionListener(this);
         
         // Repeat the same process for the other icons
-        ImageIcon openIcon = new ImageIcon(getClass().getResource("icons/open.png"));
+        ImageIcon openIcon = new ImageIcon(getClass().getResource("/icons/open.png"));
         openIcon.setImage(openIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         openButton = new JButton(openIcon);
         openButton.setToolTipText("Open");
         openButton.addActionListener(this);
         
-        ImageIcon saveIcon = new ImageIcon(getClass().getResource("icons/save.png"));
+        ImageIcon saveIcon = new ImageIcon(getClass().getResource("/icons/save.png"));
         saveIcon.setImage(saveIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         saveButton = new JButton(saveIcon);
         saveButton.setToolTipText("Save");
         saveButton.addActionListener(this);
         
-        ImageIcon cutIcon = new ImageIcon(getClass().getResource("icons/cut.png"));
+        ImageIcon cutIcon = new ImageIcon(getClass().getResource("/icons/cut.png"));
         cutIcon.setImage(cutIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         cutButton = new JButton(cutIcon);
         cutButton.setToolTipText("Cut");
         cutButton.addActionListener(this);
         
-        ImageIcon copyIcon = new ImageIcon(getClass().getResource("icons/copy.png"));
+        ImageIcon copyIcon = new ImageIcon(getClass().getResource("/icons/copy.png"));
         copyIcon.setImage(copyIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         copyButton = new JButton(copyIcon);
         copyButton.setToolTipText("Copy");
         copyButton.addActionListener(this);
         
-        ImageIcon pasteIcon = new ImageIcon(getClass().getResource("icons/paste.png"));
+        ImageIcon pasteIcon = new ImageIcon(getClass().getResource("/icons/paste.png"));
         pasteIcon.setImage(pasteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         pasteButton = new JButton(pasteIcon);
         pasteButton.setToolTipText("Paste");
         pasteButton.addActionListener(this);
 
-        ImageIcon fontIcon = new ImageIcon(getClass().getResource("icons/font.png"));
+        ImageIcon fontIcon = new ImageIcon(getClass().getResource("/icons/font.png"));
         fontIcon.setImage(fontIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         fontMenuItem = new JMenuItem("Font", fontIcon);
         fontMenuItem.setMnemonic('f');
         fontMenuItem.addActionListener(this);
 
-        ImageIcon fontSizeIcon = new ImageIcon(getClass().getResource("icons/size.png"));
+        ImageIcon fontSizeIcon = new ImageIcon(getClass().getResource("/icons/size.png"));
         fontSizeIcon.setImage(fontSizeIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         fontSizeMenuItem = new JMenuItem("Font Size", fontSizeIcon);
         fontSizeMenuItem.setMnemonic('z');
         fontSizeMenuItem.addActionListener(this);
 
-        ImageIcon colorIcon = new ImageIcon(getClass().getResource("icons/color.png"));
+        ImageIcon colorIcon = new ImageIcon(getClass().getResource("/icons/color.png"));
         colorIcon.setImage(colorIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         colorMenuItem = new JMenuItem("Color", colorIcon);
         colorMenuItem.setMnemonic('c');
@@ -538,16 +546,35 @@ public void actionPerformed2(ActionEvent e) {
         textArea.selectAll();
         statusLabel.setText("select all");
     }
+    private List<Object> highlights = new ArrayList<>();
     private void selectLeterColor() {
         Color color = JColorChooser.showDialog(this, "Select color", Color.BLACK);
-        textArea.setForeground(color);
-        statusLabel.setText("color selected");
+        int start = textArea.getSelectionStart();
+        int end = textArea.getSelectionEnd();
+        Highlighter highlighter = textArea.getHighlighter();
+        Object highlight = null;
+        try {
+            highlight = highlighter.addHighlight(start, end, new DefaultHighlighter.DefaultHighlightPainter(color));
+            highlights.add(highlight);
+            statusLabel.setText("color selected");
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
+    
     // private void selectBackgroundColor() {
-    //     Color color = JColorChooser.showDialog(this, "Select background color", Color.BLACK);
-    //     textArea.setBackground(color);
-    //     statusLabel.setText("background color selected");
-    // }
+    //    Color color = JColorChooser.showDialog(this, "Select color", Color.BLACK);
+        // int start = textArea.getSelectionStart();
+        // int end = textArea.getSelectionEnd();
+        // Highlighter highlighter = textArea.getHighlighter();
+        // highlighter.removeAllHighlights(); 
+        
+        // try {
+        //     highlighter.addHighlight(start, end, new DefaultHighlighter.DefaultHighlightPainter(color));
+        //     statusLabel.setText("color selected");
+        // } catch (BadLocationException e) {
+        //     e.printStackTrace();
+        // }
     private void selectFont() {
         Font font = JFontChooser.showDialog(this);
         textArea.setFont(font);

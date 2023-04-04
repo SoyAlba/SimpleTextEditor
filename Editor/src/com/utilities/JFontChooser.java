@@ -1,4 +1,4 @@
-package com;
+package utilities;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,7 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import com.SwingUtil;
+import utilities.SwingUtil;
 
 /**
 * <p>	<b>JFontChooser</b> - aka OzFontChooser a font selection widget. 
