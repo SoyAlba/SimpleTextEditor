@@ -506,6 +506,7 @@ public void actionPerformed2(ActionEvent e) {
             }
         }
     }
+    //show a confirm dialog
     private int showConfirmDialog(String string) {
         return 0;
     }
@@ -526,7 +527,7 @@ public void actionPerformed2(ActionEvent e) {
             }
         }
     }
-
+    // save a file as
     private void saveFileAs() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
@@ -547,7 +548,7 @@ public void actionPerformed2(ActionEvent e) {
             }
         }
     }
-
+    // exit application
     private void exitApplication(){
         if (textArea.getText().length() > 0) {
             int response = showConfirmDialog("You want to save the changes to the current file?");
@@ -560,23 +561,27 @@ public void actionPerformed2(ActionEvent e) {
         System.exit(0);
 
     }
+    // cut text
     private void cut() {
         textArea.cut();
         statusLabel.setText("Text cut");
     }
+    // copy text
     private void copy() {
         textArea.copy();
         statusLabel.setText("Text copied");
     }
+    // paste text
     private void paste() {
         textArea.paste();
         statusLabel.setText("Text pasted");
     }
-
+    // select all text
     private void selectAll() {
         textArea.selectAll();
         statusLabel.setText("select all");
     }
+    // select letter color
     private void selectLetterColor() {
         Color color = JColorChooser.showDialog(this, "Select color", Color.BLACK);
         String selectedText = textArea.getSelectedText();
@@ -594,7 +599,7 @@ public void actionPerformed2(ActionEvent e) {
         }
     }
     
-    
+    // select background color
     private List<Object> highlights = new ArrayList<>();
     private void selectLeterBackgroundColor() {
         Color color = JColorChooser.showDialog(this, "Select color", Color.BLACK);
@@ -610,11 +615,13 @@ public void actionPerformed2(ActionEvent e) {
             e.printStackTrace();
         }
     }
+    // select font
     private void selectFont() {
         Font font = JFontChooser.showDialog(this);
         textArea.setFont(font);
         statusLabel.setText("Font selected");
     }
+    // select font size 
     private void selectFontSize() {
         String size = JOptionPane.showInputDialog(this, "enter font size", "font size", JOptionPane.PLAIN_MESSAGE);
         if (size != null) {
@@ -630,6 +637,8 @@ public void actionPerformed2(ActionEvent e) {
             }
         }
     }
+
+    // update the count label for words, lines and characters
     private void updateStatus() {
         String text = textArea.getText();
         int numWords = text.split("\\s+").length;
