@@ -11,7 +11,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +32,8 @@ import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -56,6 +57,7 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
     private JButton newButton, openButton, saveButton, cutButton, copyButton, pasteButton;
     private JPanel statusBar;
     private JLabel statusLabel;
+    private JLabel countLabel;
 
     public SimpleTextEditor() {
         super("Simple Text Editor");
@@ -220,11 +222,34 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         statusBar.setLayout(new BorderLayout());
 
         statusLabel = new JLabel("Ready");
+        countLabel = new JLabel("0");
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        countLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         statusBar.add(statusLabel, BorderLayout.WEST);
+        statusBar.add(countLabel, BorderLayout.EAST);
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+        
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+        
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+        });
+        
 
         // Add the status bar to the window
         add(statusBar, BorderLayout.SOUTH);
+
+        // Update the status bar
+        updateStatus();
 
         // Display the window
         setVisible(true);
@@ -278,7 +303,7 @@ public void actionPerformed2(ActionEvent e) {
         // Set the title of the window to the default title
         setTitle("Simple Text Editor");
         // Set the status label to "Ready"
-        statusLabel.setText("Listo");
+        statusLabel.setText("Ready");
     }
 
     // Check if the user clicked the open menu item
@@ -605,6 +630,15 @@ public void actionPerformed2(ActionEvent e) {
             }
         }
     }
+    private void updateStatus() {
+        String text = textArea.getText();
+        int numWords = text.split("\\s+").length;
+        int numLines = text.split("\n").length;
+        int numChars = text.length();
+    
+        countLabel.setText(String.format("Words: %d  Lines: %d  Characters: %d", numWords, numLines, numChars));
+    }
+    
     
 }
 

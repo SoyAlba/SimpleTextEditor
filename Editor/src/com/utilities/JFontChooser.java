@@ -26,7 +26,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import utilities.SwingUtil;
 
 /**
 * <p>	<b>JFontChooser</b> - aka OzFontChooser a font selection widget. 
