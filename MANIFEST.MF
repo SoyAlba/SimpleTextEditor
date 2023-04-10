@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: src.com.Java.SimpleTextEditor
+
+Main-Class: Editor.src.com.Java.SimpleTextEditor
 
