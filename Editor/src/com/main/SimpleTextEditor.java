@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -251,7 +250,7 @@ public class SimpleTextEditor extends JFrame implements ActionListener {
         statusBar.setPreferredSize(new java.awt.Dimension(getWidth(), 20));
         statusBar.setLayout(new BorderLayout());
 
-        statusLabel = new JLabel("Ready");
+        statusLabel = new JLabel("");
         countLabel = new JLabel("0");
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         countLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -280,6 +279,7 @@ public class SimpleTextEditor extends JFrame implements ActionListener {
 
         // Update the status bar
         updateStatus();
+        
 
         // Display the window
         setVisible(true);
@@ -370,7 +370,7 @@ public void actionPerformed(ActionEvent e) {
             }
         } 
     }
-    statusLabel = new JLabel(" Ready ");
+    statusLabel = new JLabel(" ");
     statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
     statusBar.add(statusLabel);
 
@@ -385,7 +385,7 @@ public void actionPerformed(ActionEvent e) {
     menuBar.add(editMenu);
     menuBar.add(formatMenu);
         // Add a label to the status bar
-        statusLabel = new JLabel(" Ready");
+        statusLabel = new JLabel("");
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusBar.add(statusLabel);
     
@@ -395,30 +395,6 @@ public void actionPerformed(ActionEvent e) {
         // Add the scroll pane to the window
         add(scrollPane, BorderLayout.CENTER);
     
-        // Create the format menu
-        formatMenu = new JMenu("Format");
-        formatMenu.setMnemonic('f');
-    
-        fontMenuItem = new JMenuItem("Font");
-        fontMenuItem.setMnemonic('u');
-        fontMenuItem.addActionListener(this);
-    
-        colorMenuItem = new JMenuItem("Color text");
-        colorMenuItem.setMnemonic('c');
-        colorMenuItem.addActionListener(this);
-
-        fontSizeMenuItem = new JMenuItem("Background color");
-        fontSizeMenuItem.setMnemonic('z');
-        fontSizeMenuItem.addActionListener(this);
-    
-        formatMenu.add(fontMenuItem);
-        formatMenu.add(colorMenuItem);
-        formatMenu.add(fontSizeMenuItem);
-    
-        // Add the menus to the menu bar
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(formatMenu);
     
         // Enable/disable appropriate menu items and buttons
         updateMenuItemAndButtonStatus(false, false, false, false, true, false, false, false, false, false, false, false);
@@ -560,20 +536,29 @@ public void actionPerformed(ActionEvent e) {
 
     }
     // cut text
-    private void cut() {
+private void cut() {
+    String selectedText = textArea.getSelectedText();
+    if(selectedText != null && !selectedText.isEmpty()) {
         textArea.cut();
         statusLabel.setText("Text cut");
     }
-    // copy text
-    private void copy() {
+}
+
+// copy text
+private void copy() {
+    String selectedText = textArea.getSelectedText();
+    if(selectedText != null && !selectedText.isEmpty()) {
         textArea.copy();
         statusLabel.setText("Text copied");
     }
-    // paste text
-    private void paste() {
+}
+
+// paste text
+private void paste() {
         textArea.paste();
         statusLabel.setText("Text pasted");
-    }
+}
+
     // select all text
     private void selectAll() {
         textArea.selectAll();
@@ -616,9 +601,21 @@ public void actionPerformed(ActionEvent e) {
     // select font
     private void selectFont() {
         Font font = JFontChooser.showDialog(this);
-        textArea.setFont(font);
+        String selectedText = textArea.getSelectedText();
+        if (selectedText != null) {
+            JTextPane textPane = new JTextPane();
+            textPane.setFont(font);
+            textPane.setText(selectedText);
+            textPane.setEditable(false);
+            JOptionPane.showMessageDialog(this, textPane, "Selected Text", JOptionPane.PLAIN_MESSAGE);
+            textArea.replaceSelection(textPane.getText());
+        } else {
+            textArea.setFont(font);
+        }
         statusLabel.setText("Font selected");
     }
+    
+    
     // select font size 
     private void selectFontSize() {
         String size = JOptionPane.showInputDialog(this, "enter font size", "font size", JOptionPane.PLAIN_MESSAGE);
@@ -642,7 +639,7 @@ public void actionPerformed(ActionEvent e) {
         int numWords = text.split("\\s+").length;
         int numLines = text.split("\n").length;
         int numChars = text.length();
-    
+
         countLabel.setText(String.format("Words: %d  Lines: %d  Characters: %d", numWords, numLines, numChars));
     }
     
