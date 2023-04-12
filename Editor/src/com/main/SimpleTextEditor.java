@@ -1,9 +1,10 @@
-package Java;
+package main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -42,9 +43,9 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import utilities.*;
+import utilities.JFontChooser;
 
-public class SimpleTextEditor extends JFrame implements ActionListener, TextEditorFunction {
+public class SimpleTextEditor extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private JTextArea textArea;
@@ -52,9 +53,9 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
     private JMenuBar menuBar;
     private JMenu fileMenu, editMenu, formatMenu;
     private JMenuItem newMenuItem, openMenuItem, saveMenuItem, saveAsMenuItem, exitMenuItem, cutMenuItem, copyMenuItem,
-            pasteMenuItem, selectAllMenuItem, fontMenuItem,fontSizeMenuItem, colorMenuItem,colorBackgroundMenuItem;
+            pasteMenuItem, selectAllMenuItem,fontMenuItem,fontSizeMenuItem, colorMenuItem,colorBackgroundMenuItem;;
     private JToolBar toolBar;
-    private JButton newButton, openButton, saveButton, cutButton, copyButton, pasteButton;
+    private JButton newButton, openButton, saveButton, cutButton, copyButton, pasteButton,fontButton,fontSizeButton, colorButton,colorBackgroundButton;
     private JPanel statusBar;
     private JLabel statusLabel;
     private JLabel countLabel;
@@ -74,7 +75,7 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
 
         // Create the menu bar and menu items
         menuBar = new JMenuBar();
-
+        // instanciate the File menu and its items
         fileMenu = new JMenu("File");
         fileMenu.setMnemonic('a');
 
@@ -83,12 +84,11 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         newMenuItem.addActionListener(this);
 
         openMenuItem = new JMenuItem("Open");
-        openMenuItem.setMnemonic('a');
+        openMenuItem.setMnemonic('o');
         openMenuItem.addActionListener(this);
 
         saveMenuItem = new JMenuItem("Save");
         saveMenuItem.setMnemonic('g');
-
         saveMenuItem.addActionListener(this);
 
         saveAsMenuItem = new JMenuItem("Save as...");
@@ -106,8 +106,10 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         fileMenu.addSeparator();
         fileMenu.add(exitMenuItem);
 
+        // instanciate the Edit menu and its items
         editMenu = new JMenu("Edit");
         editMenu.setMnemonic('e');
+        editMenu.addActionListener(this);
 
         cutMenuItem = new JMenuItem("Cut");
         cutMenuItem.setMnemonic('t');
@@ -125,6 +127,17 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         selectAllMenuItem.setMnemonic('a');
         selectAllMenuItem.addActionListener(this);
 
+        // Add the menu items to the edit menu
+        editMenu.add(cutMenuItem);
+        editMenu.add(copyMenuItem);
+        editMenu.add(pasteMenuItem);
+        editMenu.add(selectAllMenuItem);
+
+        // add menu items to Format menu
+        formatMenu = new JMenu("Format");
+        formatMenu.setMnemonic('f');
+        formatMenu.addActionListener(this);
+
         fontMenuItem = new JMenuItem("Font");
         fontMenuItem.setMnemonic('f');
         fontMenuItem.addActionListener(this);
@@ -137,6 +150,15 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         colorMenuItem.setMnemonic('c');
         colorMenuItem.addActionListener(this);
 
+        colorBackgroundMenuItem = new JMenuItem("Background Color");
+        colorBackgroundMenuItem.setMnemonic('b');
+        colorBackgroundMenuItem.addActionListener(this);
+        
+        // Add the menu items to the format menu
+        formatMenu.add(fontMenuItem);
+        formatMenu.add(fontSizeMenuItem);
+        formatMenu.add(colorMenuItem);
+        formatMenu.add(colorBackgroundMenuItem);
 
         // Add the menu bar to the window
         setJMenuBar(menuBar);
@@ -183,21 +205,27 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
 
         ImageIcon fontIcon = new ImageIcon(getClass().getResource("/icons/font.png"));
         fontIcon.setImage(fontIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-        fontMenuItem = new JMenuItem("Font", fontIcon);
-        fontMenuItem.setMnemonic('f');
-        fontMenuItem.addActionListener(this);
+        fontButton= new JButton(fontIcon);
+        pasteButton.setToolTipText("Font");
+        fontButton.addActionListener(this);
 
         ImageIcon fontSizeIcon = new ImageIcon(getClass().getResource("/icons/size.png"));
         fontSizeIcon.setImage(fontSizeIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-        fontSizeMenuItem = new JMenuItem("Font Size", fontSizeIcon);
-        fontSizeMenuItem.setMnemonic('z');
-        fontSizeMenuItem.addActionListener(this);
+        fontSizeButton = new JButton( fontSizeIcon);
+        pasteButton.setToolTipText("Font Size");
+        fontSizeButton.addActionListener(this);
 
         ImageIcon colorIcon = new ImageIcon(getClass().getResource("/icons/color.png"));
         colorIcon.setImage(colorIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-        colorMenuItem = new JMenuItem("Color", colorIcon);
-        colorMenuItem.setMnemonic('c');
-        colorMenuItem.addActionListener(this);
+        colorButton= new JButton(colorIcon);
+        pasteButton.setToolTipText("Color");
+        colorButton.addActionListener(this);
+
+        ImageIcon colorBackgroundIcon = new ImageIcon(getClass().getResource("/icons/colorBackground.png"));
+        colorBackgroundIcon.setImage(colorBackgroundIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        colorBackgroundButton= new JButton(colorBackgroundIcon);
+        pasteButton.setToolTipText("Background Color");
+        colorBackgroundButton.addActionListener(this);
 
         // Add the buttons to the tool bar
         toolBar.add(newButton);
@@ -208,9 +236,11 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         toolBar.add(copyButton);
         toolBar.add(pasteButton);
         toolBar.addSeparator();
-        toolBar.add(fontMenuItem);
-        toolBar.add(fontSizeMenuItem);
-        toolBar.add(colorMenuItem);
+        toolBar.addSeparator();
+        toolBar.add(fontButton);
+        toolBar.add(fontSizeButton);
+        toolBar.add(colorButton);
+        toolBar.add(colorBackgroundButton);
 
         // Add the tool bar to the window
         add(toolBar, BorderLayout.NORTH);
@@ -261,19 +291,10 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         // Add the menu items to the menu bar
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
-
-        // Add the menu items to the edit menu
-        editMenu.add(cutMenuItem);
-        editMenu.add(copyMenuItem);
-        editMenu.add(pasteMenuItem);
-        editMenu.addSeparator();
-        editMenu.add(selectAllMenuItem);
+        menuBar.add(formatMenu);
 
         // Add the text area to the scroll panel
         scrollPane.setViewportView(textArea);
-
-        // Add the menu bar to the window
-        setJMenuBar(menuBar);
 
         // Add the scroll pane to the window
         add(scrollPane, BorderLayout.CENTER);
@@ -293,9 +314,11 @@ public class SimpleTextEditor extends JFrame implements ActionListener, TextEdit
         // Create a new instance of the SimpleTextEditor class
         new SimpleTextEditor();
     }
+    private void updateMenuItemAndButtonStatus(boolean b, boolean c, boolean d, boolean e, boolean f, boolean g, boolean h,
+        boolean i, boolean j, boolean k, boolean l, boolean m) {
+}
 
-@Override
-public void actionPerformed2(ActionEvent e) {
+public void actionPerformed(ActionEvent e) {
     // Check if the user clicked the new menu item
     if (e.getSource() == newMenuItem) {
         // Clear the text area
@@ -345,8 +368,7 @@ public void actionPerformed2(ActionEvent e) {
             catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }
-        
+        } 
     }
     statusLabel = new JLabel(" Ready ");
     statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -357,26 +379,6 @@ public void actionPerformed2(ActionEvent e) {
 
     // Add the status bar to the window
     add(statusBar, BorderLayout.SOUTH);
-
-    // Create the format menu and menu items
-    formatMenu = new JMenu("Format");
-    formatMenu.setMnemonic('f');
-
-    fontMenuItem = new JMenuItem("font...");
-    fontMenuItem.setMnemonic('u');
-    fontMenuItem.addActionListener(this);
-
-    fontSizeMenuItem = new JMenuItem("Font Size...");
-    fontSizeMenuItem.setMnemonic('z');
-    fontSizeMenuItem.addActionListener(this);
-
-    colorMenuItem = new JMenuItem("Color...");
-    colorMenuItem.setMnemonic('c');
-    colorMenuItem.addActionListener(this);
-
-    formatMenu.add(fontMenuItem);
-    formatMenu.add(colorMenuItem);
-    formatMenu.add(fontSizeMenuItem);
 
     // Add the file, edit, and format menus to the menu bar
     menuBar.add(fileMenu);
@@ -404,6 +406,10 @@ public void actionPerformed2(ActionEvent e) {
         colorMenuItem = new JMenuItem("Color text");
         colorMenuItem.setMnemonic('c');
         colorMenuItem.addActionListener(this);
+
+        fontSizeMenuItem = new JMenuItem("Background color");
+        fontSizeMenuItem.setMnemonic('z');
+        fontSizeMenuItem.addActionListener(this);
     
         formatMenu.add(fontMenuItem);
         formatMenu.add(colorMenuItem);
@@ -420,14 +426,6 @@ public void actionPerformed2(ActionEvent e) {
         // Display the window
         setVisible(true);
     
-    }
-    
-    private void updateMenuItemAndButtonStatus(boolean b, boolean c, boolean d, boolean e, boolean f, boolean g, boolean h,
-        boolean i, boolean j, boolean k, boolean l, boolean m) {
-}
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == newMenuItem || e.getSource() == newButton) {
             newFile();
         } else if (e.getSource() == openMenuItem || e.getSource() == openButton) {
@@ -446,13 +444,13 @@ public void actionPerformed2(ActionEvent e) {
             paste();
         } else if (e.getSource() == selectAllMenuItem) {
             selectAll();
-        } else if (e.getSource() == colorMenuItem) {
+        } else if (e.getSource() == colorMenuItem||e.getSource()==colorButton) {
             selectLetterColor();
-        }else if (e.getSource() == fontMenuItem) {
+        }else if (e.getSource() == fontMenuItem||e.getSource()==fontButton) {
             selectFont();
-        }else if (e.getSource() == fontSizeMenuItem) {
+        }else if (e.getSource() == fontSizeMenuItem||e.getSource()==fontSizeButton) {
             selectFontSize();
-        } else if (e.getSource() == colorBackgroundMenuItem) {
+        } else if (e.getSource() == colorBackgroundMenuItem||e.getSource()==colorBackgroundButton) {
             selectLeterBackgroundColor();
         }
     }
